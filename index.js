@@ -50,7 +50,7 @@ app.get('/alumno', (req, res) => {
   });
 });
 
-
+/*
 app.post('/agregar_usuario', (req, res) => {
   const datos = req.body;
   const query = `INSERT INTO Usuario VALUES (?, ?, ?, ?, ?, ?, ?)`;
@@ -74,7 +74,7 @@ app.post('/agregar_alumno', (req, res) => {
     }
     res.status(200).json({ message: 'Datos recibidos e insertados', id: results.insertId });
   });
-});
+});*/
 
 
 
