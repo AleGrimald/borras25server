@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/admin', (req, res) => {
-  const query = 'select id_cliente,apellido,Cliente.nombre,edad,dni,correo,telefono,pais,provincia,departamento,localidad,calle,numero,piso,dpto,Usuario.usuario,Usuario.passw,Usuario.fecha_inicio,Usuario.fecha_fin,Usuario.estado,Servicio.nombre,Servicio.precio from Cliente inner join Usuario on Usuario.id_usuario = Cliente.fk_usuario inner join Servicio on Usuario.fk_servicio_contratado = Servicio.id_servicio order by Cliente.id_cliente;';
+  const query = 'select id_cliente,apellido,Cliente.nombreCliente,edad,dni,correo,telefono,pais,provincia,departamento,localidad,calle,numero,piso,dpto,Usuario.usuario,Usuario.passw,Usuario.fecha_inicio,Usuario.fecha_fin,Usuario.estado,Servicio.nombre,Servicio.precio from Cliente inner join Usuario on Usuario.id_usuario = Cliente.fk_usuario inner join Servicio on Usuario.fk_servicio_contratado = Servicio.id_servicio order by Cliente.id_cliente;';
   connection.query(query, (error, results) => {
     if (error) {
       return res.status(500).json(error);
