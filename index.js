@@ -41,7 +41,7 @@ app.get('/admin', (req, res) => {
 });
 
 app.get('/alumno', (req, res) => {
-  const query = 'select id_cliente, apellido, nombreCliente, telefono from Cliente';
+  const query = 'select id_cliente, apellido, nombreCliente, telefono from Cliente;';
   connection.query(query, (error, results) => {
     if (error) {
       return res.status(500).json(error);
@@ -50,12 +50,12 @@ app.get('/alumno', (req, res) => {
   });
 });
 
-/*
+
 app.post('/agregar_usuario', (req, res) => {
   const datos = req.body;
-  const query = `INSERT INTO Usuario VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  const query = `INSERT INTO Usuario VALUES (insert into Usuario values(${datos.id},${datos.usu},${datos.pass},${datos.fechaInicio},${datos.fechaF},${datos.estado},${datos.plan});)`;
 
-  connection.query(query, [datos.id, datos.usu, datos.pass, datos.fechaInicio, datos.fechaF, datos.estado, datos.plan], (error, results) => {
+  connection.query(query, datos, (error, results) => {
     if (error) {
       return res.status(500).json({ error: error.message });
     }
@@ -66,15 +66,15 @@ app.post('/agregar_usuario', (req, res) => {
 
 app.post('/agregar_alumno', (req, res) => {
   const datos = req.body;
-  const query = `INSERT INTO Cliente VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  const query = `INSERT INTO Cliente VALUES (${datos.id},${datos.ape},${datos.nom},${datos.ed},${datos.dni},${datos.mail},${datos.tel},${datos.pais},${datos.prov},${datos.dep},${datos.loc},${datos.calle},${datos.num},${datos.piso},${datos.dpto},${datos.id});`;
 
-  connection.query(query, [datos.id, datos.ape, datos.nom, datos.ed, datos.dni, datos.mail, datos.tel, datos.pais, datos.prov, datos.dep, datos.loc, datos.calle, datos.num, datos.piso, datos.dpto], (error, results) => {
+  connection.query(query, datos, (error, results) => {
     if (error) {
       return res.status(500).json({ error: error.message });
     }
     res.status(200).json({ message: 'Datos recibidos e insertados', id: results.insertId });
   });
-});*/
+});
 
 
 
