@@ -53,7 +53,7 @@ app.get('/alumno', (req, res) => {
 
 app.post('/agregar_usuario', (req, res) => {
   const datos = req.body;
-  const query = `INSERT INTO Usuario VALUES (insert into Usuario values(${datos.id},${datos.usu},${datos.pass},${datos.fechaInicio},${datos.fechaF},${datos.estado},${datos.plan});)`;
+  const query = `insert into Usuario values(${datos.id},${datos.usu},${datos.pass},${datos.fechaInicio},${datos.fechaF},${datos.estado},${datos.plan});)`;
 
   connection.query(query, datos, (error, results) => {
     if (error) {
