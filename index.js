@@ -50,24 +50,32 @@ app.get('/alumno', (req, res) => {
   });
 });
 
-/*app.post('/agregar_alumno', (req, res) => {
+
+app.post('/agregar_usuario', (req, res) => {
   const datos = req.body;
-  const queryUser = `INSERT INTO Usuario VALUES (?, ?, ?, ?, ?, ?, ?)`;
-  const queryClient = `INSERT INTO Cliente VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  const query = `INSERT INTO Usuario VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-  connection.query(queryUser, [datos.id, datos.usu, datos.pass, datos.fechaInicio, datos.fechaF, datos.estado, datos.plan], (error, results) => {
-      if (error) {
-          return res.status(500).json({ error: error.message });
-      }
+  connection.query(query, [datos.id, datos.usu, datos.pass, datos.fechaInicio, datos.fechaF, datos.estado, datos.plan], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
 
-      connection.query(queryClient, [datos.id, datos.ape, datos.nom, datos.ed, datos.dni, datos.mail, datos.tel, datos.pais, datos.prov, datos.dep, datos.loc, datos.calle, datos.num, datos.piso, datos.dpto], (error, results) => {
-          if (error) {
-              return res.status(500).json({ error: error.message });
-          }
-          res.status(200).json({ message: 'Datos recibidos e insertados', id: results.insertId });
-      });
+    res.status(200).json({ message: 'Datos recibidos e insertados', id: results.insertId });
   });
-});*/
+});
+
+app.post('/agregar_alumno', (req, res) => {
+  const datos = req.body;
+  const query = `INSERT INTO Cliente VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+  connection.query(query, [datos.id, datos.ape, datos.nom, datos.ed, datos.dni, datos.mail, datos.tel, datos.pais, datos.prov, datos.dep, datos.loc, datos.calle, datos.num, datos.piso, datos.dpto], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+    res.status(200).json({ message: 'Datos recibidos e insertados', id: results.insertId });
+  });
+});
+
 
 
 app.listen(port, () => {
