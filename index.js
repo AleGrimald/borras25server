@@ -41,7 +41,7 @@ app.get('/admin', (req, res) => {
 });
 
 app.get('/alumno', (req, res) => {
-  const query = 'select id_cliente, apellido, nombre, telefono from Cliente';
+  const query = 'select id_cliente, apellido, nombreCliente, telefono from Cliente';
   connection.query(query, (error, results) => {
     if (error) {
       return res.status(500).json(error);
