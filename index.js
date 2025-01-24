@@ -21,7 +21,7 @@ const connection = mysql.createConnection({
 connection.connect();
 
 app.get('/', (req, res) => {
-  const query = 'SELECT id_usuario, usuario, passw, fk_servicio_contratado, fk_tipo_usuario FROM Usuario';
+  const query = 'SELECT usuario, passw FROM Usuario';
   connection.query(query, (error, results) => {
     if (error) {
       return res.status(500).json(error);
@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/admin', (req, res) => {
-  const query = 'select Cliente.apellido,Cliente.nombreCliente,Cliente.telefono,PaqueteServicio.nombre,EstadoServicio.estado from Cliente inner join Usuario on Usuario.id_usuario = Cliente.fk_usuario inner join Servicio on Usuario.fk_servicio_contratado = Servicio.id_servicio inner join PaqueteServicio on PaqueteServicio.id_paquete = Servicio.fk_paquete inner join EstadoServicio on EstadoServicio.id_estado_servicio = Servicio.fk_estado_servicio;';
+  const query = 'select id_cliente,apellido,Cliente.nombre,edad,dni,correo,telefono,pais,provincia,departamento,localidad,calle,numero,piso,dpto,Usuario.usuario,Usuario.passw,Usuario.fecha_inicio,Usuario.fecha_fin,Usuario.estado,Servicio.nombre,Servicio.precio from Cliente inner join Usuario on Usuario.id_usuario = Cliente.fk_usuario inner join Servicio on Usuario.fk_servicio_contratado = Servicio.id_servicio order by Cliente.id_cliente;';
   connection.query(query, (error, results) => {
     if (error) {
       return res.status(500).json(error);
@@ -41,7 +41,7 @@ app.get('/admin', (req, res) => {
 });
 
 app.get('/alumno', (req, res) => {
-  const query = 'select Cliente.id_cliente, Cliente.apellido,Cliente.nombreCliente,Cliente.telefono from Cliente';
+  const query = 'select id_cliente, apellido, nombre, telefono from Cliente';
   connection.query(query, (error, results) => {
     if (error) {
       return res.status(500).json(error);
@@ -50,17 +50,25 @@ app.get('/alumno', (req, res) => {
   });
 });
 
-app.post('/agregar_alumno', (req,res)=>{
+app.post('/agregar_alumno', (req, res) => {
   const datos = req.body;
-  const query = "insert into Cliente values()";
+  const queryUser = `INSERT INTO Usuario VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  const queryClient = `INSERT INTO Cliente VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-  connection.query(query, datos, (error, results) => {
-    if (error){
-      return res.status(500).json({ error: error.message });
-    }
-    res.status(200).json({ message: 'Datos recibidos e insertados', id: results.insertId });
+  connection.query(queryUser, [datos.id, datos.usu, datos.pass, datos.fechaInicio, datos.fechaF, datos.estado, datos.plan], (error, results) => {
+      if (error) {
+          return res.status(500).json({ error: error.message });
+      }
+
+      connection.query(queryClient, [datos.id, datos.ape, datos.nom, datos.ed, datos.dni, datos.mail, datos.tel, datos.pais, datos.prov, datos.dep, datos.loc, datos.calle, datos.num, datos.piso, datos.dpto], (error, results) => {
+          if (error) {
+              return res.status(500).json({ error: error.message });
+          }
+          res.status(200).json({ message: 'Datos recibidos e insertados', id: results.insertId });
+      });
   });
 });
+
 
 app.listen(port, () => {
   console.log(`Servidor de desarrollo escuchando en port: ${port}`);
