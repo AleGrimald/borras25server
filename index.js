@@ -21,7 +21,7 @@ const connection = mysql.createConnection({
 connection.connect();
 
 app.get('/', (req, res) => {
-  const query = 'SELECT usuario, passw FROM Usuario';
+  const query = 'SELECT usuario, passw FROM Usuario;';
   connection.query(query, (error, results) => {
     if (error) {
       return res.status(500).json(error);
