@@ -40,7 +40,7 @@ app.get('/admin', (req, res) => {
   });
 });
 
-/*app.get('/alumno', (req, res) => {
+app.get('/alumno', (req, res) => {
   const query = 'select id_cliente, apellido, nombreCliente, telefono from Cliente;';
   connection.query(query, (error, results) => {
     if (error) {
@@ -48,12 +48,12 @@ app.get('/admin', (req, res) => {
     }
     res.status(200).json(results);
   });
-});*/
+});
 
 
 app.post('/agregar_usuario', (req, res) => {
   const datos = req.body;
-  const query = `insert into Usuario values(${datos.id},${datos.usu},${datos.pass},${datos.fechaInicio},${datos.fechaF},${datos.estado},${datos.plan});)`;
+  const query = `insert into Usuario values(${datos.id},"${datos.usu}","${datos.pass}","${datos.fechaInicio}","${datos.fechaF}","${datos.estado}",${datos.plan});)`;
 
   connection.query(query, datos, (error, results) => {
     if (error) {
@@ -66,7 +66,7 @@ app.post('/agregar_usuario', (req, res) => {
 
 app.post('/agregar_alumno', (req, res) => {
   const datos = req.body;
-  const query = `INSERT INTO Cliente VALUES (${datos.id},${datos.ape},${datos.nom},${datos.ed},${datos.dni},${datos.mail},${datos.tel},${datos.pais},${datos.prov},${datos.dep},${datos.loc},${datos.calle},${datos.num},${datos.piso},${datos.dpto},${datos.id});`;
+  const query = `INSERT INTO Cliente VALUES (${datos.id},"${datos.ape}","${datos.nom}",${datos.ed},${datos.dni},"${datos.mail}",${datos.tel},"${datos.pais}","${datos.prov}","${datos.dep}","${datos.loc}","${datos.calle}",${datos.num},${datos.piso},"${datos.dpto}",${datos.id});`;
 
   connection.query(query, datos, (error, results) => {
     if (error) {
