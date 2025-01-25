@@ -66,7 +66,7 @@ app.post('/agregar_usuario_cliente', (req, res) => {
         return res.status(500).json({ error: error.message });
       }
 
-      const queryUsuario = `INSERT INTO Usuario (id, usuario, passw, fecha_inicio, fecha_fin, estado, plan) VALUES (${datos.id}, "${datos.usu}", "${datos.pass}", "${datos.fechaInicio}", "${datos.fechaFin}", "${datos.estado}", ${datos.plan});`;
+      const queryUsuario = `INSERT INTO Usuario VALUES (${parseInt(datos.id)}, "${datos.usu}", "${datos.pass}", "${datos.fechaInicio}", "${datos.fechaFin}", "${datos.estado}", ${parseInt(datos.plan)});`;
 
       connection.query(queryUsuario, (error, results) => {
         if (error) {
@@ -77,8 +77,7 @@ app.post('/agregar_usuario_cliente', (req, res) => {
           });
         }
 
-        const usuarioId = results.insertId;
-        const queryCliente = `INSERT INTO Cliente (id_cliente, apellido, nombreCliente, edad, dni, correo, telefono, pais, provincia, departamento, localidad, calle, numero, piso, dpto, fk_usuario) VALUES (${datos.id}, "${datos.ape}", "${datos.nom}", ${datos.ed}, ${datos.dni}, "${datos.mail}", ${datos.tel}, "${datos.pais}", "${datos.prov}", "${datos.dep}", "${datos.loc}", "${datos.calle}", ${datos.num}, ${datos.piso}, "${datos.dpto}", ${usuarioId});`;
+        const queryCliente = `INSERT INTO Cliente VALUES (${parseInt(datos.id)}, "${datos.ape}", "${datos.nom}", ${parseInt(datos.ed)}, ${parseInt(datos.dni)}, "${datos.mail}", ${parseInt(datos.tel)}, "${datos.pais}", "${datos.prov}", "${datos.dep}", "${datos.loc}", "${datos.calle}", ${parseInt(datos.num)}, ${parseInt(datos.piso)}, "${datos.dpto}", ${parseInt(datos.id)});`;
 
         connection.query(queryCliente, (error, results) => {
           if (error) {
