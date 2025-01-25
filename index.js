@@ -50,41 +50,63 @@ app.get('/admin', (req, res) => {
   });
 });
 
-app.post('/agregar_usuario', (req, res) => {
+app.post('/agregar_usuario_cliente', (req, res) => {
   const datos = req.body;
+  
   pool.getConnection((err, connection) => {
     if (err) {
+      console.error('Error al obtener la conexión:', err);
       return res.status(500).json(err);
     }
-    const query = `insert into Usuario values(${datos.id},"${datos.usu}","${datos.pass}","${datos.fechaInicio}","${datos.fechaF}","${datos.estado}",${datos.plan});)`;
 
-    connection.query(query, datos, (error, results) => {
-      connection.release();
+    connection.beginTransaction(error => {
       if (error) {
+        connection.release();
+        console.error('Error al iniciar la transacción:', error);
         return res.status(500).json({ error: error.message });
       }
-      res.status(200).json({ message: 'Datos recibidos e insertados', id: results.insertId });
+
+      const queryUsuario = `INSERT INTO Usuario (id, usuario, passw, fecha_inicio, fecha_fin, estado, plan) VALUES (${datos.id}, "${datos.usu}", "${datos.pass}", "${datos.fechaInicio}", "${datos.fechaFin}", "${datos.estado}", ${datos.plan});`;
+
+      connection.query(queryUsuario, (error, results) => {
+        if (error) {
+          return connection.rollback(() => {
+            connection.release();
+            console.error('Error en la consulta de Usuario:', error);
+            return res.status(500).json({ error: error.message });
+          });
+        }
+
+        const usuarioId = results.insertId;
+        const queryCliente = `INSERT INTO Cliente (id_cliente, apellido, nombreCliente, edad, dni, correo, telefono, pais, provincia, departamento, localidad, calle, numero, piso, dpto, fk_usuario) VALUES (${datos.id}, "${datos.ape}", "${datos.nom}", ${datos.ed}, ${datos.dni}, "${datos.mail}", ${datos.tel}, "${datos.pais}", "${datos.prov}", "${datos.dep}", "${datos.loc}", "${datos.calle}", ${datos.num}, ${datos.piso}, "${datos.dpto}", ${usuarioId});`;
+
+        connection.query(queryCliente, (error, results) => {
+          if (error) {
+            return connection.rollback(() => {
+              connection.release();
+              console.error('Error en la consulta de Cliente:', error);
+              return res.status(500).json({ error: error.message });
+            });
+          }
+
+          connection.commit(error => {
+            if (error) {
+              return connection.rollback(() => {
+                connection.release();
+                console.error('Error al hacer commit:', error);
+                return res.status(500).json({ error: error.message });
+              });
+            }
+
+            connection.release();
+            res.status(200).json({ message: 'Datos de Usuario y Cliente insertados exitosamente' });
+          });
+        });
+      });
     });
   });
 });
 
-app.post('/agregar_alumno', (req, res) => {
-  const datos = req.body;
-  pool.getConnection((err, connection) => {
-    if (err) {
-      return res.status(500).json(err);
-    }
-    const query = `INSERT INTO Cliente VALUES (${datos.id},"${datos.ape}","${datos.nom}",${datos.ed},${datos.dni},"${datos.mail}",${datos.tel},"${datos.pais}","${datos.prov}","${datos.dep}","${datos.loc}","${datos.calle}",${datos.num},${datos.piso},"${datos.dpto}",${datos.id});`;
-
-    connection.query(query, datos, (error, results) => {
-      connection.release();
-      if (error) {
-        return res.status(500).json({ error: error.message });
-      }
-      res.status(200).json({ message: 'Datos recibidos e insertados', id: results.insertId });
-    });
-  });
-});
 
 app.listen(port, () => {
   console.log(`Servidor de desarrollo escuchando en port: ${port}`);
