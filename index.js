@@ -27,6 +27,7 @@ app.get('/', (req, res) => {
       return res.status(500).json(error);
     }
     res.status(200).json(results);
+    connection.end();
   });
 });
 
@@ -37,6 +38,7 @@ app.get('/admin', (req, res) => {
       return res.status(500).json(error);
     }
     res.status(200).json(results);
+    connection.end();
   });
 });
 
@@ -47,6 +49,7 @@ app.get('/admin', (req, res) => {
       return res.status(500).json(error);
     }
     res.status(200).json(results);
+    connection.end();
   });
 });*/
 
@@ -61,6 +64,7 @@ app.post('/agregar_usuario', (req, res) => {
     }
 
     res.status(200).json({ message: 'Datos recibidos e insertados', id: results.insertId });
+    connection.end();
   });
 });
 
@@ -73,6 +77,7 @@ app.post('/agregar_alumno', (req, res) => {
       return res.status(500).json({ error: error.message });
     }
     res.status(200).json({ message: 'Datos recibidos e insertados', id: results.insertId });
+    connection.end();
   });
 });
 
