@@ -76,8 +76,6 @@ app.post('/agregar_alumno', (req, res) => {
   });
 });
 
-connection.end();
-
 app.listen(port, () => {
   console.log(`Servidor de desarrollo escuchando en port: ${port}`);
 });
