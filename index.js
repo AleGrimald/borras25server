@@ -106,7 +106,7 @@ app.post('/agregar_usuario_cliente', (req, res) => {
   });
 });
 
-app.post('/actualizar_usuario_cliente', (req, res) => {
+app.put('/actualizar_usuario_cliente', (req, res) => {
   const datos = req.body;
   
   pool.getConnection((err, connection) => {
