@@ -4,7 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 3306;
+const port = /*process.env.PORT ||*/ 3306;
 
 app.use(cors());
 app.use(express.json());
@@ -105,6 +105,71 @@ app.post('/agregar_usuario_cliente', (req, res) => {
     });
   });
 });
+
+app.post('/actualizar_usuario_cliente', (req, res) => {
+  const datos = req.body;
+  
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error('Error al obtener la conexión:', err);
+      return res.status(500).json(err);
+    }
+
+    connection.beginTransaction(error => {
+      if (error) {
+        connection.release();
+        console.error('Error al iniciar la transacción:', error);
+        return res.status(500).json({ error: error.message });
+      }
+
+      const queryUsuario = `
+        UPDATE Usuario
+        SET usuario = "${datos.usu}", passw = "${datos.pass}", fecha_inicio = "${datos.fechaInicio}", fecha_fin = "${datos.fechaFin}", estado = "${datos.estado}", fk_servicio_contratado = ${parseInt(datos.plan)}
+        WHERE id_usuario = ${parseInt(datos.id)};
+      `;
+
+      connection.query(queryUsuario, (error, results) => {
+        if (error) {
+          return connection.rollback(() => {
+            connection.release();
+            console.error('Error en la consulta de Usuario:', error);
+            return res.status(500).json({ error: error.message });
+          });
+        }
+
+        const queryCliente = `
+          UPDATE Cliente
+          SET apellido = "${datos.ape}", nombreCliente = "${datos.nom}", edad = ${parseInt(datos.ed)}, dni = ${parseInt(datos.dni)}, correo = "${datos.mail}", telefono = ${parseInt(datos.tel)}, pais = "${datos.pais}", provincia = "${datos.prov}", departamento = "${datos.dep}", localidad = "${datos.loc}", calle = "${datos.calle}", numero = ${parseInt(datos.num)}, piso = ${parseInt(datos.piso)}, dpto = "${datos.dpto}"
+          WHERE fk_usuario = ${parseInt(datos.id)};
+        `;
+
+        connection.query(queryCliente, (error, results) => {
+          if (error) {
+            return connection.rollback(() => {
+              connection.release();
+              console.error('Error en la consulta de Cliente:', error);
+              return res.status(500).json({ error: error.message });
+            });
+          }
+
+          connection.commit(error => {
+            if (error) {
+              return connection.rollback(() => {
+                connection.release();
+                console.error('Error al hacer commit:', error);
+                return res.status(500).json({ error: error.message });
+              });
+            }
+
+            connection.release();
+            res.status(200).json({ message: 'Datos de Usuario y Cliente actualizados exitosamente' });
+          });
+        });
+      });
+    });
+  });
+});
+
 
 
 app.listen(port, () => {
