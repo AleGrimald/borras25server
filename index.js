@@ -170,6 +170,63 @@ app.put('/actualizar_usuario_cliente', (req, res) => {
   });
 });
 
+app.delete('/eliminar_usuario_cliente', (req, res) => {
+  const { id_cliente } = req.body;
+  console.log(id_cliente)
+
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error('Error al obtener la conexión:', err);
+      return res.status(500).json(err);
+    }
+
+    connection.beginTransaction(error => {
+      if (error) {
+        connection.release();
+        console.error('Error al iniciar la transacción:', error);
+        return res.status(500).json({ error: error.message });
+      }
+
+      const queryEliminarCliente = `delete from Cliente where id_cliente = ${parseInt(id_cliente)};`;
+      const queryEliminarUsuario = `delete from Usuario where id_usuario = ${parseInt(id_cliente)};`;
+
+      connection.query(queryEliminarCliente, (error, results) => {
+        if (error) {
+          return connection.rollback(() => {
+            connection.release();
+            console.error('Error en la consulta de Cliente:', error);
+            return res.status(500).json({ error: error.message });
+          });
+        }
+
+        connection.query(queryEliminarUsuario, (error, results) => {
+          if (error) {
+            return connection.rollback(() => {
+              connection.release();
+              console.error('Error en la consulta de Usuario:', error);
+              return res.status(500).json({ error: error.message });
+            });
+          }
+
+          connection.commit(error => {
+            if (error) {
+              return connection.rollback(() => {
+                connection.release();
+                console.error('Error al hacer commit:', error);
+                return res.status(500).json({ error: error.message });
+              });
+            }
+
+            connection.release();
+            res.status(200).json({ message: 'Usuario y Cliente eliminados exitosamente' });
+          });
+        });
+      });
+    });
+  });
+});
+
+
 
 
 app.listen(port, () => {
