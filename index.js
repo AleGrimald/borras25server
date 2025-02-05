@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
     if (err) {
       return res.status(500).json(err);
     }
-    const query = 'SELECT id_usuario, usuario, passw FROM Usuario;';
+    const query = 'SELECT id_usuario, usuario, passw, conectado FROM Usuario;';
     connection.query(query, (error, results) => {
       connection.release();
       if (error) {
