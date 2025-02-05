@@ -226,7 +226,53 @@ app.delete('/eliminar_usuario_cliente', (req, res) => {
   });
 });
 
+app.put('/actualizar_login', (req, res) => {
+  const datos = req.body;
+  
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error('Error al obtener la conexión:', err);
+      return res.status(500).json(err);
+    }
 
+    connection.beginTransaction(error => {
+      if (error) {
+        connection.release();
+        console.error('Error al iniciar la transacción:', error);
+        return res.status(500).json({ error: error.message });
+      }
+
+      const queryUsuario = `
+        UPDATE Usuario
+        SET conectado = "${parseInt(datos.conectado)}"
+        WHERE id_usuario = ${parseInt(datos.id)};
+      `;
+
+      connection.query(queryUsuario, (error, results) => {
+        if (error) {
+          return connection.rollback(() => {
+            connection.release();
+            console.error('Error en la consulta de Usuario:', error);
+            return res.status(500).json({ error: error.message });
+          });
+        }
+
+        connection.commit(error => {
+          if (error) {
+            return connection.rollback(() => {
+              connection.release();
+              console.error('Error al hacer commit:', error);
+              return res.status(500).json({ error: error.message });
+            });
+          }
+
+          connection.release();
+          res.status(200).json({ message: 'Datos de Usuario y Cliente actualizados exitosamente' });
+        });
+      });
+    });
+  });
+});
 
 
 app.listen(port, () => {
