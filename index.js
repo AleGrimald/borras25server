@@ -124,7 +124,13 @@ app.put('/actualizar_usuario_cliente', (req, res) => {
 
       const queryUsuario = `
         UPDATE Usuario
-        SET usuario = "${datos.usu}", passw = "${datos.pass}", fecha_inicio = "${datos.fechaInicio}", fecha_fin = "${datos.fechaFin}", estado = "${datos.estado}", fk_servicio_contratado = ${parseInt(datos.plan)}
+        SET usuario = "${datos.usu}",
+          passw = "${datos.pass}",
+          fecha_inicio = "${datos.fechaInicio}", 
+          fecha_fin = "${datos.fechaFin}", 
+          estado = "${datos.estado}", 
+          fk_servicio_contratado = ${parseInt(datos.plan)},
+          conectado = ${0}
         WHERE id_usuario = ${parseInt(datos.id)};
       `;
 
@@ -244,7 +250,7 @@ app.put('/actualizar_login', (req, res) => {
 
       const queryUsuario = `
         UPDATE Usuario
-        SET conectado = "${parseInt(datos.conectado)}"
+        SET conectado = "${parseInt(datos.conect)}"
         WHERE id_usuario = ${parseInt(datos.id)};
       `;
 
