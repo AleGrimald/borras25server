@@ -280,6 +280,12 @@ app.put('/actualizar_login', (req, res) => {
   });
 });
 
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "script-src 'self' https://accounts.google.com https://apis.google.com;");
+  next();
+});
+
+
 
 app.listen(port, () => {
   console.log(`Servidor de desarrollo escuchando en port: ${port}`);
