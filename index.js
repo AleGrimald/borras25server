@@ -181,9 +181,9 @@ app.put('/actualizar_usuario_cliente', (req, res) => {
   });
 });
 
-app.put('/asignar_rutina', (req, res)=>{
+app.put('/asignar_rutina', (req, res) => {
   const datos = req.body;
-  
+
   pool.getConnection((err, connection) => {
     if (err) {
       console.error('Error al obtener la conexión:', err);
@@ -211,12 +211,24 @@ app.put('/asignar_rutina', (req, res)=>{
             return res.status(500).json({ error: error.message });
           });
         }
-      });
 
+        connection.commit(error => {
+          if (error) {
+            return connection.rollback(() => {
+              connection.release();
+              console.error('Error al hacer commit:', error);
+              return res.status(500).json({ error: error.message });
+            });
+          }
+
+          connection.release();
+          res.status(200).json({ message: 'Datos de Usuario y Cliente actualizados exitosamente' });
+        });
+      });
     });
-    
   });
 });
+
 
 app.delete('/eliminar_usuario_cliente', (req, res) => {
   const { id_cliente } = req.body;
