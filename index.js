@@ -212,7 +212,9 @@ app.put('/asignar_rutina', (req, res)=>{
           });
         }
       });
+
     });
+    
   });
 });
 
