@@ -181,6 +181,41 @@ app.put('/actualizar_usuario_cliente', (req, res) => {
   });
 });
 
+app.put('/asignar_rutina', (req, res)=>{
+  const datos = req.body;
+  
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error('Error al obtener la conexión:', err);
+      return res.status(500).json(err);
+    }
+
+    connection.beginTransaction(error => {
+      if (error) {
+        connection.release();
+        console.error('Error al iniciar la transacción:', error);
+        return res.status(500).json({ error: error.message });
+      }
+
+      const queryUsuario = `
+        UPDATE Usuario
+        SET link_rutina = ${datos.link}
+        WHERE id_usuario = ${parseInt(datos.id)};
+      `;
+
+      connection.query(queryUsuario, (error, results) => {
+        if (error) {
+          return connection.rollback(() => {
+            connection.release();
+            console.error('Error en la consulta de Usuario:', error);
+            return res.status(500).json({ error: error.message });
+          });
+        }
+      });
+    });
+  });
+});
+
 app.delete('/eliminar_usuario_cliente', (req, res) => {
   const { id_cliente } = req.body;
   console.log(id_cliente)
