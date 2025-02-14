@@ -184,6 +184,7 @@ app.put('/actualizar_usuario_cliente', (req, res) => {
 app.put('/asignar_rutina', (req, res) => {
   const datos = req.body;
 
+  console.log("Datos en el Backend: ",datos);
   pool.getConnection((err, connection) => {
     if (err) {
       console.error('Error al obtener la conexión:', err);
