@@ -197,7 +197,7 @@ app.put('/asignar_rutina', (req, res) => {
         return res.status(500).json({ error: error.message });
       }
 
-      const queryUsuario = `UPDATE Usuario SET link_rutina = ${datos.link} WHERE id_usuario = ${datos.id};`
+      const queryUsuario = `UPDATE Usuario SET link_rutina = "${datos.link}" WHERE id_usuario = ${datos.id};`
 
       connection.query(queryUsuario, (error, results) => {
         if (error) {
