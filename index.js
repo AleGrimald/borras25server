@@ -184,7 +184,6 @@ app.put('/actualizar_usuario_cliente', (req, res) => {
 app.put('/asignar_rutina', (req, res) => {
   const datos = req.body;
 
-  console.log("Datos en el Backend: ",datos);
   pool.getConnection((err, connection) => {
     if (err) {
       console.error('Error al obtener la conexión:', err);
@@ -198,11 +197,7 @@ app.put('/asignar_rutina', (req, res) => {
         return res.status(500).json({ error: error.message });
       }
 
-      const queryUsuario = `
-        UPDATE Usuario
-        SET link_rutina = ${datos.link}
-        WHERE id_usuario = ${parseInt(datos.id)};
-      `;
+      const queryUsuario = `UPDATE Usuario SET link_rutina = ${datos.link} WHERE id_usuario = ${datos.id};`
 
       connection.query(queryUsuario, (error, results) => {
         if (error) {
