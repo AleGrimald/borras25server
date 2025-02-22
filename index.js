@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
     if (err) {
       return res.status(500).json(err);
     }
-    const query = 'SELECT id_usuario, usuario, passw, link_rutina FROM Usuario;';
+    const query = 'SELECT id_usuario, usuario, passw, conectado FROM Usuario;';
     connection.query(query, (error, results) => {
       connection.release();
       if (error) {
@@ -40,22 +40,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/admin', (req, res) => {
-  pool.getConnection((err, connection) => {
-    if (err) {
-      return res.status(500).json(err);
-    }
-    const query = 'select id_cliente,apellido,Cliente.nombreCliente,edad,dni,correo,telefono,pais,provincia,departamento,localidad,calle,numero,piso,dpto,Usuario.usuario,Usuario.passw,Usuario.fecha_inicio,Usuario.fecha_fin,Usuario.estado,Servicio.nombre,Servicio.precio from Cliente inner join Usuario on Usuario.id_usuario = Cliente.fk_usuario inner join Servicio on Usuario.fk_servicio_contratado = Servicio.id_servicio order by Cliente.id_cliente;';
-    connection.query(query, (error, results) => {
-      connection.release();
-      if (error) {
-        return res.status(500).json(error);
-      }
-      res.status(200).json(results);
-    });
-  });
-});
-
-app.get('/alumno', (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       return res.status(500).json(err);
