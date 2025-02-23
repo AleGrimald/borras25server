@@ -71,7 +71,7 @@ app.post('/agregar_usuario_cliente', (req, res) => {
         return res.status(500).json({ error: error.message });
       }
 
-      const queryUsuario = `INSERT INTO Usuario VALUES (${parseInt(datos.id)}, "${datos.usu}", "${datos.pass}", "${datos.fechaInicio}", "${datos.fechaFin}", "${datos.estado}", ${parseInt(datos.plan)}, 0);`;
+      const queryUsuario = `INSERT INTO Usuario VALUES (${parseInt(datos.id)}, "${datos.usu}", "${datos.pass}", "${datos.fechaInicio}", "${datos.fechaFin}", "${datos.estado}", ${parseInt(datos.plan)}, 0, null);`;
 
       connection.query(queryUsuario, (error, results) => {
         if (error) {
