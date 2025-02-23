@@ -282,7 +282,7 @@ app.delete('/eliminar_usuario_cliente', (req, res) => {
   });
 });
 
-app.put('/actualizar_login', (req, res) => {
+app.put('/actualizar_estado_conexion', (req, res) => {
   const datos = req.body;
   
   pool.getConnection((err, connection) => {
