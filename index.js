@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
     if (err) {
       return res.status(500).json(err);
     }
-    const query = 'SELECT id_usuario, usuario, passw, conectado, link_rutina FROM Usuario;';
+    const query = 'SELECT id_usuario, usuario, passw, conectado, link_rutina, fecha_fin FROM Usuario;';
     connection.query(query, (error, results) => {
       connection.release();
       if (error) {
