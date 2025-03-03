@@ -8,10 +8,12 @@ const port = process.env.PORT || 3306;
 
 app.use((req, res, next) => {
   res.setHeader(
-    "Content-Security-Policy", 
-    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com; style-src 'self' 'unsafe-inline'; frame-src 'self' https://accounts.google.com https://drive.google.com; child-src 'self' https://accounts.google.com https://drive.google.com;");
+      "Content-Security-Policy",
+      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; frame-src 'self' https://accounts.google.com https://drive.google.com; child-src 'self' https://accounts.google.com https://drive.google.com;"
+  );
   next();
 });
+
 
 app.use(cors());
 app.use(express.json());
